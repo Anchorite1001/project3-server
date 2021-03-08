@@ -13,7 +13,8 @@ const app = express(); //express application
 const server = http.createServer(app);//server
 const io = socketio(server); //socket.io
 
-app.use(router)
+app.use(router);
+app.use(cors());
 
 io.on('connection', (socket) => {
   console.log('A new user has joined.');
@@ -47,7 +48,7 @@ io.on('connection', (socket) => {
 
     if(user) {
       io.to(user.room).emit('message', {user:'admin', text:`${user.name} has left ${user.room}.`});
-      
+
       io.to(user.room).emit('roomUsers', {room:user.room, users:getUsersInRoom(user.room)});//update user data in a room
     }
   })
