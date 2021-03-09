@@ -11,7 +11,14 @@ const router = require('./router');
 
 const app = express(); //express application
 const server = http.createServer(app);//server
-const io = socketio(server); //socket.io
+const io = socketio(server, {
+  cors: {
+    origin: 'localhost:3000',
+    methods:['GET', 'POST'],
+    allowHeaders: ["my-custom-header"],
+    credentials: true
+  }
+}); //socket.io
 
 app.use(router);
 app.use(cors());
@@ -47,7 +54,7 @@ io.on('connection', (socket) => {
     const user = removeUser(socket.id);
 
     if(user) {
-      io.to(user.room).emit('message', {user:'admin', text:`${user.name} has left ${user.room}.`});
+      io.to(user.room).emit('message', {user:'admin', text:`${user.name} has left ${user.room}`});
 
       io.to(user.room).emit('roomUsers', {room:user.room, users:getUsersInRoom(user.room)});//update user data in a room
     }
