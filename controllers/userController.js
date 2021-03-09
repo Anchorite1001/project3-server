@@ -6,6 +6,8 @@ const getUsersInRoom = (room) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
+const getReceiver = ( name, room ) => users.find((user) => user.room === room && user.name === name)
+
 const addUser = ( { id, name, room } ) => {
   name = name.trim().toLowerCase();
   room = room.trim().toLowerCase();
@@ -30,4 +32,4 @@ const removeUser = (id) => {
   }
 };
 
-module.exports = { getUsersInRoom, getUser, addUser, removeUser }
+module.exports = { getUsersInRoom, getUser, getReceiver, addUser, removeUser }
