@@ -9,6 +9,12 @@ const PORT = process.env.PORT || 5000;
 
 //set up express application
 const app = express();
+
+//proxy middleware for cors problems
+const wsProxy = createProxyMiddleware('ws://604855ab4ddf05705e0e75cc--retro-chat-123.netlify.app', { changeOrigin: true })
+
+app.use(wsProxy);
+
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
@@ -21,11 +27,6 @@ const io = socketio(server, {
 
 app.use(router);
 app.use(cors());
-
-//proxy middleware for cors problems
-const wsProxy = createProxyMiddleware('ws://604855ab4ddf05705e0e75cc--retro-chat-123.netlify.app', { changeOrigin: true })
-
-app.use(wsProxy);
 
 //set up socket.io
 const { getUsersInRoom, getUser, getReceiver, addUser, removeUser } = require ('./controllers/userController');
