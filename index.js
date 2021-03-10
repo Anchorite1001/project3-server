@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
     origin: 'https://retro-chat-123.netlify.app/',
-    methods:['GET', 'POST'],
+    methods:['GET', 'POST', 'OPTIONS'],
     allowHeaders: ["my-custom-header"],
     credentials: true
   }
