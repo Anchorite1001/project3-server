@@ -3,6 +3,7 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
 const router = require('./router');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const PORT = process.env.PORT || 5000;
 
@@ -20,6 +21,11 @@ const io = socketio(server, {
 
 app.use(router);
 app.use(cors());
+
+//proxy middleware for cors problems
+const apiProxy = createProxyMiddleware('/api', { target:'https://604855ab4ddf05705e0e75cc--retro-chat-123.netlify.app' })
+
+app.use('/api', apiProxy);
 
 //set up socket.io
 const { getUsersInRoom, getUser, getReceiver, addUser, removeUser } = require ('./controllers/userController');
