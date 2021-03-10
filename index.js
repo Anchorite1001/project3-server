@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 //set up express application
 const app = express();
-const server = http.createServer(app);
+const server = http.Server(app);
 const io = socketio(server, {
   cors: {
     origin: 'https://retro-chat-123.netlify.app/',
@@ -19,7 +19,6 @@ const io = socketio(server, {
 });
 
 app.use(router);
-app.use(cors());
 
 //set up socket.io
 const { getUsersInRoom, getUser, getReceiver, addUser, removeUser } = require ('./controllers/userController');
