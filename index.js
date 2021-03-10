@@ -19,7 +19,7 @@ const io = socketio(server, {
 });
 
 app.use(router);
-// app.use(cors());
+app.use(cors());
 
 //set up socket.io
 const { getUsersInRoom, getUser, getReceiver, addUser, removeUser } = require ('./controllers/userController');
