@@ -72,8 +72,21 @@ io.on('connection', (socket) => {
     const sender = getUser(socket.id);
     const receiver = getReceiver(name,room);
 
-    socket.broadcast.to(receiver.id).emit('private', {user:sender.name, text:message});
+    io.to(socket.id).emit('private', {user:sender.name, text:message});
+    io.to(receiver.id).emit('private', {user:sender.name, text:message});
     callback();
+  });
+
+  //handling videocall
+  socket.on('sendCall', ({ name, room, signal }, callback) => {
+    const caller = getUser(socket.id);
+    const receiver = getReceiver(name, room);
+
+    io.to(receiver.id).emit('callUser', {signal, from:caller.name, to:name }) //not finish
+  });
+
+  socket.on('answerCall', ({ signal }) => {
+    io.to(socket.id).emit('callAccepted', { signal })
   })
 })
 
