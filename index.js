@@ -13,8 +13,8 @@ const io = socketio(server, {
   cors: {
     origin: 'https://retro-chat-123.netlify.app/',
     methods:['GET', 'POST'],
-    allowHeaders: ["my-custom-header"],
-    credentials: true
+    // allowHeaders: ["my-custom-header"],
+    // credentials: true
   }
 });
 
