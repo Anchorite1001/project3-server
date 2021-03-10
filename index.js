@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'localhost:3000',
     methods:['GET', 'POST'],
     allowHeaders: ["my-custom-header"],
     credentials: true
@@ -23,9 +23,9 @@ app.use(router);
 app.use(cors());
 
 //proxy middleware for cors problems
-const apiProxy = createProxyMiddleware('/api', { target:'https://604855ab4ddf05705e0e75cc--retro-chat-123.netlify.app' })
+const wsProxy = createProxyMiddleware('ws://604855ab4ddf05705e0e75cc--retro-chat-123.netlify.app', { changeOrigin: true })
 
-app.use('/api', apiProxy);
+app.use(wsProxy);
 
 //set up socket.io
 const { getUsersInRoom, getUser, getReceiver, addUser, removeUser } = require ('./controllers/userController');
@@ -96,4 +96,4 @@ io.on('connection', (socket) => {
   })
 })
 
-server.listen(PORT, () => console.log(`Server started on port ${PORT}.`))
+server.listen(PORT, () => console.log(`Server started on port ${PORT}.`));
