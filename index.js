@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: 'localhost:3000',
+    origin: '*',
     methods:['GET', 'POST'],
     allowHeaders: ["my-custom-header"],
     credentials: true
