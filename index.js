@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
+const moment = require('moment');
+
 const router = require('./router');
 
 const PORT = process.env.PORT || 5000;
@@ -34,9 +36,9 @@ io.on('connection', (socket) => {
     };
 
     //joining message: for user(me)
-    socket.emit('message', {user:'admin', text: `${user.name}, welcome to ${user.room}!`});
+    socket.emit('message', {user:'admin', time:moment().format('MMMM Do YYYY, h:mm:ss a'), text: `${user.name}, welcome to ${user.room}!`});
     //joining message: for other users in the chatroom
-    socket.broadcast.to(user.room).emit('message', {user:'admin', text: `${user.name} has joined ${user.room}`});//message to everyone in the room except the user.
+    socket.broadcast.to(user.room).emit('message', {user:'admin', time:moment().format('MMMM Do YYYY, h:mm:ss a'), text: `${user.name} has joined ${user.room}`});//message to everyone in the room except the user.
 
     socket.join(user.room);
 
@@ -50,7 +52,7 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
 
-    io.to(user.room).emit('message', {user:user.name, text:message});
+    io.to(user.room).emit('message', {user:user.name, time:moment().format('MMMM Do YYYY, h:mm:ss a'), text:message});
 
     callback();
   })
@@ -60,7 +62,7 @@ io.on('connection', (socket) => {
     const user = removeUser(socket.id);
 
     if(user) {
-      io.to(user.room).emit('message', {user:'admin', text:`${user.name} has left ${user.room}`});
+      io.to(user.room).emit('message', {user:'admin', time:moment().format('MMMM Do YYYY, h:mm:ss a'), text:`${user.name} has left ${user.room}`});
 
       io.to(user.room).emit('roomUsers', {room:user.room, users:getUsersInRoom(user.room)});//update user data in a room
     }
@@ -71,8 +73,8 @@ io.on('connection', (socket) => {
     const sender = getUser(socket.id);
     const receiver = getReceiver(name,room);
 
-    io.to(socket.id).emit('private', {user:sender.name, text:message});
-    io.to(receiver.id).emit('private', {user:sender.name, text:message});
+    io.to(socket.id).emit('private', {user:sender.name, time:moment().format('MMMM Do YYYY, h:mm:ss a'), text:message});
+    io.to(receiver.id).emit('private', {user:sender.name, time:moment().format('MMMM Do YYYY, h:mm:ss a'), text:message});
     callback();
   });
 
